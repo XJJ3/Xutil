@@ -3,7 +3,10 @@
 <template>
   <div class="app_wrap" data-tauri-drag-region>
 
-    <button @click="handleClick"> 打开 </button>
+    <button @click="handleClick"> 写入 </button>
+
+
+    <button @click="handleClick2"> 打开 </button>
 
   </div>
 </template>
@@ -15,6 +18,11 @@ const handleClick = () => {
   invoke('dispatch_command', { name: 'command_one', args: {path: '111'}})
   .then((response) => console.log(response))
 }
+const handleClick2 = () => {
+  invoke('dispatch_command', { name: 'command_two', args: {path: '111'}})
+  .then((response) => console.log(response))
+}
+
 </script>
 
 <style scoped>
