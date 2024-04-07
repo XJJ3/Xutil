@@ -10,11 +10,10 @@ pub struct CommandContainer;
 impl CommandContainer {
     // 根据名称获取并执行命令
     fn execute_command(name: &str, args: &serde_json::Value) -> Result<serde_json::Value, String> {
-        // 这里只是一个示例，你需要根据实际情况来实现查找和执行逻辑
         match name {
+            "get_all_commands" => custom_cmd::GetAllCommands::execute(args),
+            "add_command_group" => custom_cmd::AddCommandGroup::execute(args),
             "add_command" => custom_cmd::AddCommand::execute(args),
-            "command_two" => custom_cmd::CommandTwo::execute(args),
-            // ...其他命令
             _ => Err(format!("Unknown command: {}", name)),
         }
     }

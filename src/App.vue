@@ -21,7 +21,7 @@ const handleClick = () => {
   .then((response) => console.log(response))
 }
 const handleClick2 = () => {
-  invoke('dispatch_command', { name: 'command_two', args: {path: '111'}})
+  invoke('dispatch_command', { name: 'get_all_commands', args: {}})
   .then((response) => console.log(response))
 }
 

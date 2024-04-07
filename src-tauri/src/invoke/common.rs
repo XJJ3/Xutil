@@ -17,6 +17,7 @@ pub struct CommandData {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CommandGroupData {
     pub group_name: String,
+    pub group_icon: Option<String>,
     pub commands: Vec<CommandData>,
 }
 
