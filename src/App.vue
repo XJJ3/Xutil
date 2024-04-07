@@ -13,15 +13,25 @@
 
 <script setup lang="ts">
 import { invoke } from '@tauri-apps/api';
+import { appDataDir } from '@tauri-apps/api/path';
+import { onMounted } from 'vue';
 
 const handleClick = () => {
-  invoke('dispatch_command', { name: 'command_one', args: {path: '111'}})
+  invoke('dispatch_command', { name: 'add_command', args: { cmd: 'sh', args: ["/xujunjie/aaa/cmd.sh"], current_dir: '/'}})
   .then((response) => console.log(response))
 }
 const handleClick2 = () => {
   invoke('dispatch_command', { name: 'command_two', args: {path: '111'}})
   .then((response) => console.log(response))
 }
+
+
+onMounted(() => {
+  appDataDir().then((res) => {
+    console.log("---", res)
+  });
+  
+})
 
 </script>
 
