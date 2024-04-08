@@ -15,6 +15,11 @@ fn main() {
             app.listen_global("click", move |event| {
                 println!("got event-name with payload {:?}", event.payload());
             });
+            let window = app.get_window("main").unwrap();
+            window
+                .set_ignore_cursor_events(true)
+                .expect("error setting ignore cursor events");
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![invoke::dispatch_command])
