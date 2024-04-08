@@ -2,6 +2,7 @@ use super::{
     common::*,
     util::{read_user_command_setting_data, write_user_command_setting_data},
 };
+use std::{process::Command, thread, time::Duration};
 
 pub struct GetAllCommands;
 
@@ -118,5 +119,45 @@ impl CommandTrait for AddCommand {
         };
 
         Ok(serde_json::json!({ "result": "CommandOne executed" }))
+    }
+}
+
+pub struct ExecuteCmd;
+
+impl CommandTrait for ExecuteCmd {
+    fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String> {
+        let params = match serde_json::from_str::<CommandData>(&args.to_string()) {
+            Ok(arg) => arg,
+            Err(_) => return Err("参数解析失败！".to_string()),
+        };
+
+        if params.cmd.is_empty() {
+            return Err("请传入指令".to_string());
+        }
+        let mut cmd = Command::new(params.cmd);
+        cmd.args(&params.args);
+
+        if let Some(cur_dir) = params.current_dir {
+            cmd.current_dir(cur_dir);
+        }
+
+        let handle = thread::spawn(move || {
+            let status = cmd.status().expect("Failed to execute command");
+
+            thread::sleep(Duration::from_secs(5));
+
+            // 检查命令是否成功执行
+            if status.success() {
+                println!("Script executed successfully!");
+            } else {
+                println!("Script failed to execute: {}", status);
+            }
+
+            status
+        });
+
+        let status = handle.join().unwrap();
+
+        Ok(serde_json::json!({ "result": format!("{}", status) }))
     }
 }
