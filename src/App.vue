@@ -11,17 +11,22 @@
     </div>
 
 
-    <div class="app_cont_area" data-tauri-drag-region @click.stop="false">
+    <div class="app_cont_area" @click.stop="false">
 
-      <button @click="handleClick"> 写入 </button>
+      <div class="app_cont_area_bg"></div>
+      <div class="app_cont_area_body" data-tauri-drag-region>
+        <button @click="handleClick"> 写入 </button>
 
-      <button @click="handleClick2"> 打开 </button>
+        <button @click="handleClick2"> 打开 </button>
 
-      <button @click="handleClick3"> 执行 </button>
+        <button @click="handleClick3"> 执行 </button>
 
-      <button @click="handleClick4"> 事件 </button>
+        <button @click="handleClick4"> 事件 </button>
 
-      <div>{{ result }}</div>
+        <div>{{ result }}</div>
+      </div>
+
+   
 
     </div>
 
@@ -118,7 +123,26 @@ onMounted(() => {
   .app_cont_area {
     width: calc(100% - 40px);
     height: calc(100% - 40px);
-    // background-color: aqua;
+    position: relative;
+    overflow: hidden;
+
+    .app_cont_area_bg {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.7);
+      filter: blur(50px);
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 1;
+    }
+
+    .app_cont_area_body {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 2;
+    }
   }
 
   .app_child_menu_area {
