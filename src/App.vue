@@ -1,21 +1,33 @@
 
 
 <template>
-  <div class="app_wrap" data-tauri-drag-region>
-
-    <button @click="handleClick"> 写入 </button>
+  <div class="app_window_wrap" @click="() => emit('blur')">
 
 
-    <button @click="handleClick2"> 打开 </button>
-
-    <button @click="handleClick3"> 执行 </button>
-
-    <button @click="handleClick4"> 事件 </button>
-
-
-    <div>{{ result }}</div>
+    <div class="app_menu_area">
+      <button class="menu_item">
+        <img src="@/assets/menu/command.svg">
+      </button>
+    </div>
 
 
+    <div class="app_cont_area" data-tauri-drag-region @click.stop="false">
+
+      <button @click="handleClick"> 写入 </button>
+
+      <button @click="handleClick2"> 打开 </button>
+
+      <button @click="handleClick3"> 执行 </button>
+
+      <button @click="handleClick4"> 事件 </button>
+
+      <div>{{ result }}</div>
+
+    </div>
+
+    <div class="app_child_menu_area"></div>
+
+    
   </div>
 </template>
 
@@ -45,7 +57,7 @@ const handleClick3 = () => {
 }
 
 const handleClick4 = () => {
-  emit('click')
+  emit('blur')
 }
 
 
@@ -58,16 +70,62 @@ onMounted(() => {
 
 </script>
 
-<style scoped>
-.app_wrap {
+<style scoped lang="scss">
+.app_window_wrap {
   width: 100vw;
   height: 100vh;
-  background: rgba(255,0,0,0.2);
+  // background: rgba(255,0,0,0.2);
   position: fixed;
   top: 0;
   left: 0;
-
   color: white;
+  display: flex;
+  flex-wrap: wrap;
+
+  .app_menu_area {
+    width: calc(100% - 40px);
+    height: 40px;
+    // background-color: rgba(152, 138, 138, 0.1);
+    display: flex;
+    align-items: center;
+    
+
+    .menu_item {
+      width: 32px;
+      height: 32px;
+
+      background-image: linear-gradient( 135deg, #d9d1d1 10%, #1904E5 100%);
+      border: none;
+      color: white;
+ 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 8px;
+      cursor: pointer;
+      background-size: 200%;
+      transition: 0.6s;
+      outline: none;
+
+      img {
+        width: 90%;
+        height: 90%;
+      }
+    }
+  }
+
+  .app_cont_area {
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    // background-color: aqua;
+  }
+
+  .app_child_menu_area {
+    width: 40px;
+    height: calc(100% - 40px);
+    background-color: rgba(184, 135, 10, 0.1);
+  }
 
 }
 </style>

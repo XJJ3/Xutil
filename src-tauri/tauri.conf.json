@@ -55,10 +55,10 @@
     "macOSPrivateApi": true,
     "windows": [{
       "fullscreen": false,
-      "height": 200,
+      "height": 240,
       "resizable": false,
       "title": "XUtil",
-      "width": 200,
+      "width": 240,
       "transparent": true,
       "decorations": false,
       "alwaysOnTop": true
