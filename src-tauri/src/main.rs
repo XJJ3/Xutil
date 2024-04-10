@@ -8,19 +8,19 @@ mod invoke;
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
-            event::listenFrontEvent(app);
+            event::listen_front_event(app);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![invoke::dispatch_command])
         .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::Focused(focused) => {
+            tauri::WindowEvent::Focused(_focused) => {
                 // hide window whenever it loses focus
                 // if !focused {
                 //     event.window().set_ignore_cursor_events(false).unwrap();
                 // }
                 // println!("聚焦");
             }
-            tauri::WindowEvent::Moved(moved) => {
+            tauri::WindowEvent::Moved(_moved) => {
                 // println!("移动");
             }
             _ => {}

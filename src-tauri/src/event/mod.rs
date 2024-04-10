@@ -1,10 +1,10 @@
 use tauri::App;
 use tauri::Manager;
 
-use rdev::{simulate, Button, EventType, Key, SimulateError};
+use rdev::{simulate, Button, EventType, SimulateError};
 use std::{thread, time};
 
-pub fn listenFrontEvent(app: &mut App) {
+pub fn listen_front_event(app: &mut App) {
     let window = app.get_window("main").unwrap();
     let callback_app_handle = app.app_handle().clone();
 
