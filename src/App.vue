@@ -11,10 +11,7 @@
     </div>
 
 
-    <div class="app_cont_area" @click.stop="false">
-
-      <div class="app_cont_area_bg"></div>
-      <div class="app_cont_area_body" data-tauri-drag-region>
+    <div class="app_cont_area" data-tauri-drag-region @click.stop="false">
         <button @click="handleClick"> 写入 </button>
 
         <button @click="handleClick2"> 打开 </button>
@@ -24,8 +21,6 @@
         <button @click="handleClick4"> 事件 </button>
 
         <div>{{ result }}</div>
-      </div>
-
    
 
     </div>
@@ -34,6 +29,15 @@
 
     
   </div>
+
+  <svg width="0" height="0" style="position:absolute;">
+    <filter id="blur" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="6" edgeMode="duplicate"/>
+      <feComponentTransfer>
+          <feFuncA type="discrete" tableValues="0 1"/>
+      </feComponentTransfer>
+    </filter>
+</svg>
 </template>
 
 <script setup lang="ts">
@@ -79,7 +83,7 @@ onMounted(() => {
 .app_window_wrap {
   width: 100vw;
   height: 100vh;
-  // background: rgba(255,0,0,0.2);
+  background: rgba(255,0,0,0);
   position: fixed;
   top: 0;
   left: 0;
@@ -124,25 +128,10 @@ onMounted(() => {
     width: calc(100% - 40px);
     height: calc(100% - 40px);
     position: relative;
-    overflow: hidden;
-
-    .app_cont_area_bg {
-      width: 100%;
-      height: 100%;
-      background-color: rgba(255,255,255,0.7);
-      filter: blur(50px);
-      position: absolute;
-      left: 0;
-      top: 0;
-      z-index: 1;
-    }
-
-    .app_cont_area_body {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      z-index: 2;
-    }
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-sizing: border-box;
+    border-radius: 8px;
   }
 
   .app_child_menu_area {
@@ -152,4 +141,6 @@ onMounted(() => {
   }
 
 }
+
+
 </style>
