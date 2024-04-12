@@ -1,11 +1,9 @@
-import { createApp } from 'vue'
-import './style.css'
-import App from './App.vue'
-import { invoke } from '@tauri-apps/api'
+import { createApp } from 'vue';
+import './style.css';
+import App from './App.vue';
+import router from './router';
 
-
-createApp(App).mount('#app')
-
-invoke('greet', { name: 'World' })
-  // `invoke` 返回的是一个 Promise
-  .then((response) => console.log(response))
+const app = createApp(App);
+app.use(router);
+ 
+app.mount('#app');
