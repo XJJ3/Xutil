@@ -51,10 +51,11 @@ const handleClick = () => {
     args: { cmd: 'sh', args: ['/xujunjie/aaa/cmd.sh'], current_dir: '/' },
   }).then((response) => console.log(response));
 };
-const handleClick2 = () => {
-  invoke('dispatch_command', { name: 'get_all_commands', args: {} }).then((response) =>
-    console.log(response)
-  );
+const getAllCommand = () => {
+  invoke('dispatch_command', { name: 'get_all_commands', args: {} }).then((response) => {
+    // const res = JSON.parse(response as string);
+    console.log('结果', response);
+  });
 };
 
 const handleClick3 = () => {
@@ -69,6 +70,10 @@ const handleClick3 = () => {
 const handleClick4 = () => {
   emit('blur');
 };
+
+onMounted(() => {
+  getAllCommand();
+});
 
 const handleNewCommand = () => {
   const webview = WebviewWindow.getByLabel('addCommand');

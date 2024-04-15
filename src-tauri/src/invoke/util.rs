@@ -107,17 +107,6 @@ pub fn write_user_command_setting_data(content: String) -> Result<String, String
     }
 }
 
-pub fn copy_file(from: &Path, to: &Path) -> Result<u64, String> {
-    if !from.exists() {
-        return Err("目标文件不存在".to_string());
-    }
-
-    match fs::copy(from, to) {
-        Ok(file) => Ok(file),
-        Err(_) => Err("保存失败".to_string()),
-    }
-}
-
 pub fn generate_uuid() -> String {
     rand::thread_rng()
         .sample_iter(Alphanumeric)
