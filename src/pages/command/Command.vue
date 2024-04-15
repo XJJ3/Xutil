@@ -1,34 +1,40 @@
 <template>
   <div class="command_wrapper" data-tauri-drag-region>
-    <!-- <button @click="handleClick"> 写入 </button>
-
-    <button @click="handleClick2"> 打开 </button>
-
-    <button @click="handleClick3"> 执行 </button>
-
-    <button @click="handleClick4"> 事件 </button> -->
-
-    <!-- <div>{{ result }}</div> -->
-
     <div class="command_content" data-tauri-drag-region>
       <div class="command_list">
-        <!-- <div class="btn middle"></div> -->
         <div class="btn middle">
-          <img src="@/assets/command/open.svg" alt="" />
+          <img src="@/assets/command/open.svg" />
           <span>打开项目</span>
         </div>
       </div>
 
       <div class="tool">
         <div class="tool_item" @click="handleNewCommand">
-          <img src="@/assets/command/add.svg" alt="" />
+          <img src="@/assets/command/add.svg" />
           <span>添加</span>
         </div>
 
         <div class="tool_item"></div>
       </div>
     </div>
-    <div class="command_menu" data-tauri-drag-region></div>
+    <div class="command_menu" data-tauri-drag-region>
+      <div class="btn_add" @click="handleNewCommandGroup">
+        <svg
+          t="1713150812171"
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          p-id="3023"
+          width="48"
+          height="48"
+        >
+          <path
+            d="M469.333334 213.333334 469.333334 469.333334 213.333334 469.333334 213.333334 554.666666 469.333334 554.666666 469.333334 810.666664 554.666666 810.666664 554.666666 554.666666 810.666664 554.666666 810.666664 469.333334 554.666666 469.333334 554.666666 213.333334 469.333334 213.333334Z"
+            p-id="3024"
+          ></path>
+        </svg>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -71,10 +77,30 @@ const handleNewCommand = () => {
     new WebviewWindow('addCommand', {
       url: 'http://localhost:5173/#/add-command',
       fullscreen: false,
-      height: 360,
+      height: 280,
       resizable: false,
       title: '添加指令',
       width: 500,
+      alwaysOnTop: true,
+    });
+  } else {
+    console.log(webview);
+    webview.setFocus();
+  }
+};
+
+const handleNewCommandGroup = () => {
+  const webview = WebviewWindow.getByLabel('addCommandGroup');
+
+  if (!webview) {
+    new WebviewWindow('addCommandGroup', {
+      url: 'http://localhost:5173/#/add-command-group',
+      fullscreen: false,
+      height: 180,
+      resizable: false,
+      title: '添加指令',
+      width: 500,
+      alwaysOnTop: true,
     });
   } else {
     console.log(webview);
@@ -199,6 +225,30 @@ const handleNewCommand = () => {
   .command_menu {
     width: 40px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2px;
+    box-sizing: border-box;
+
+    .btn_add {
+      width: 32px;
+      height: 32px;
+      border: 2px solid gray;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      color: gray;
+      cursor: pointer;
+
+      & > svg {
+        width: 90%;
+        height: 90%;
+        fill: currentColor;
+      }
+    }
   }
 }
 </style>

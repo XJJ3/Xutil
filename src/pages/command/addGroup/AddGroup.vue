@@ -3,20 +3,14 @@
     <n-config-provider :theme="darkTheme">
       <n-form ref="formRef" :label-width="80" :model="formValue" :rules="rules">
         <n-grid :cols="24" :x-gap="12">
-          <n-form-item-gi :span="12" label="指令名称" path="command">
-            <n-input v-model:value="formValue.command" placeholder="输入指令名称" />
+          <n-form-item-gi :span="12" label="分组名称" path="groupName">
+            <n-input v-model:value="formValue.groupName" placeholder="输入分组名称" />
           </n-form-item-gi>
-          <n-form-item-gi :span="12" label="命令参数">
-            <n-dynamic-tags />
-          </n-form-item-gi>
-          <n-form-item-gi :span="12" label="图标">
+          <n-form-item-gi :span="12" label="图标" path="groupIcon">
             <n-button attr-type="button" style="width: 180px" @click="handleSelectFile">
               上传文件
             </n-button>
             <n-image width="30" :src="selectImgUrl" object-fit="cover" style="margin-left: 10px" />
-          </n-form-item-gi>
-          <n-form-item-gi :span="12" label="执行路径">
-            <n-input v-model:value="formValue.currDir" placeholder="输入执行指令需设定的当前路径" />
           </n-form-item-gi>
         </n-grid>
 
@@ -31,6 +25,7 @@
 import { invoke } from '@tauri-apps/api';
 import { open } from '@tauri-apps/api/dialog';
 import { readBinaryFile } from '@tauri-apps/api/fs';
+import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
 import { FormInst, useMessage } from 'naive-ui';
 import { darkTheme } from 'naive-ui';
 
@@ -38,16 +33,19 @@ const selectImgUrl = ref();
 const message = useMessage();
 const formRef = ref<FormInst | null>(null);
 const formValue = ref({
-  command: '',
-  icon: '',
-  args: [],
-  currDir: '',
+  groupName: '',
+  groupIcon: '',
 });
 const rules = {
-  command: {
+  groupName: {
     required: true,
-    message: '请输入指令',
+    message: '请输入名称',
     trigger: ['input'],
+  },
+  groupIcon: {
+    required: true,
+    message: '请选择图标',
+    trigger: ['change'],
   },
 };
 
@@ -60,13 +58,22 @@ const handleValidateClick = (e: MouseEvent) => {
 
 const addCommandReq = () => {
   invoke('dispatch_command', {
-    name: 'add_command',
+    name: 'add_command_group',
     args: {
-      cmd: formValue.value.command,
-      args: formValue.value.args,
-      current_dir: formValue.value.currDir,
+      group_name: formValue.value.groupName,
+      group_icon: formValue.value.groupIcon,
     },
-  }).then((response) => console.log(response));
+  }).then((response) => {
+    console.log(response);
+    message.success('添加成功');
+
+    window.setTimeout(() => {
+      const win = getCurrent();
+      win.close();
+      const mainWin = WebviewWindow.getByLabel('main');
+      mainWin?.setFocus();
+    }, 1500);
+  });
 };
 
 const handleSelectFile = async () => {
@@ -91,6 +98,7 @@ const handleSelectFile = async () => {
   });
   const url = URL.createObjectURL(blob);
   selectImgUrl.value = url;
+  formValue.value.groupIcon = path;
 };
 
 function getFileExtension(fileName: string) {

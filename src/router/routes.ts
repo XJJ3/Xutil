@@ -20,4 +20,9 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: '添加指令' },
     component: () => import('@/pages/command/addCommand'),
   },
+  {
+    path: '/add-command-group',
+    meta: { title: '添加分组' },
+    component: () => import('@/pages/command/addGroup'),
+  },
 ];

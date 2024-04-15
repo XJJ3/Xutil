@@ -1,15 +1,16 @@
 use std::{
-    fs::{create_dir_all, File, OpenOptions},
+    fs::{self, create_dir_all, File, OpenOptions},
     io::{Read, Write},
     path::{Path, PathBuf},
 };
 
+use rand::{distributions::Alphanumeric, Rng};
 use tauri::api::path::local_data_dir;
 
-use super::common::USER_CMD_FILE;
+use super::common::{USER_CMD_FILE, USER_CMD_ICON_FILE_DIR};
 use crate::common::GLOBAL_USER_DATA_DIR;
 
-fn get_user_data_directory() -> Option<Box<PathBuf>> {
+pub fn get_user_data_directory() -> Option<Box<PathBuf>> {
     let data_dir = match local_data_dir() {
         Some(mut path) => {
             path.push(GLOBAL_USER_DATA_DIR);
@@ -38,6 +39,25 @@ pub fn get_command_file_path() -> Option<Box<Path>> {
     };
 
     Some(command_data_dir.as_path().into())
+}
+
+pub fn get_command_icons_file_dir() -> Option<Box<Path>> {
+    let command_icons_dir = match get_user_data_directory() {
+        Some(mut path) => {
+            path.push(USER_CMD_ICON_FILE_DIR);
+            path
+        }
+        None => return None,
+    };
+
+    if !command_icons_dir.exists() {
+        match fs::create_dir(command_icons_dir.as_path()) {
+            Ok(_) => Some(command_icons_dir.as_path().into()),
+            Err(_) => None,
+        }
+    } else {
+        Some(command_icons_dir.as_path().into())
+    }
 }
 
 pub fn get_file(file_path: &Path) -> Result<File, String> {
@@ -85,4 +105,23 @@ pub fn write_user_command_setting_data(content: String) -> Result<String, String
     } else {
         Err("系统用户数据路径获取失败".to_string())
     }
+}
+
+pub fn copy_file(from: &Path, to: &Path) -> Result<u64, String> {
+    if !from.exists() {
+        return Err("目标文件不存在".to_string());
+    }
+
+    match fs::copy(from, to) {
+        Ok(file) => Ok(file),
+        Err(_) => Err("保存失败".to_string()),
+    }
+}
+
+pub fn generate_uuid() -> String {
+    rand::thread_rng()
+        .sample_iter(Alphanumeric)
+        .take(8)
+        .map(char::from)
+        .collect::<String>()
 }

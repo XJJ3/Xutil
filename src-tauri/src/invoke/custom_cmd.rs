@@ -1,8 +1,19 @@
+use crate::invoke::util::{generate_uuid, get_command_icons_file_dir};
+
 use super::{
     common::*,
     util::{read_user_command_setting_data, write_user_command_setting_data},
 };
-use std::{process::Command, thread, time::Duration};
+use std::{
+    env::join_paths,
+    ffi::{OsStr, OsString},
+    fs,
+    io::Read,
+    path::Path,
+    process::Command,
+    thread,
+    time::Duration,
+};
 
 pub struct GetAllCommands;
 
@@ -31,8 +42,37 @@ impl CommandTrait for AddCommandGroup {
 
         let group_icon = match params.group_icon {
             Some(icon) => icon,
-            None => "/setting.icon".to_string(),
+            None => "resources/setting.svg".to_string(),
         };
+        let group_icon_url = Path::new(&group_icon);
+
+        let path_extension = match group_icon_url.extension() {
+            Some(extension) => match extension.to_str() {
+                Some(str) => str,
+                None => "",
+            },
+            None => "",
+        };
+
+        let icons_dir_path = match get_command_icons_file_dir() {
+            Some(path) => path,
+            None => return Err("数据路径获取失败".to_string()),
+        };
+
+        let new_path = format!(
+            "{}/{}.{}",
+            icons_dir_path.display(),
+            format!("group_{}_{}", group_name, &generate_uuid()),
+            path_extension
+        );
+
+        // println!("新文件： {}", new_path);
+
+        if let Ok(_file_u64) = fs::copy(group_icon_url, Path::new(&new_path)) {
+            println!("拷贝成功");
+        } else {
+            return Err("图标文件拷贝失败".to_string());
+        }
 
         let contents = match read_user_command_setting_data() {
             Ok(cont) => Some(cont),
@@ -49,25 +89,25 @@ impl CommandTrait for AddCommandGroup {
             all_cmd_data = serde_json::from_str::<Vec<CommandGroupData>>(&cont).unwrap();
             all_cmd_data.push(CommandGroupData {
                 group_name: group_name,
-                group_icon: Some(group_icon),
+                group_icon: Some(new_path),
                 commands: Vec::new(),
             })
         } else {
             all_cmd_data[0].group_name = group_name;
-            all_cmd_data[0].group_icon = Some(group_icon);
+            all_cmd_data[0].group_icon = Some(new_path);
         }
 
-        println!("现有数据： {:?}", all_cmd_data);
+        // println!("现有数据： {:?}", all_cmd_data);
 
         let json_data = serde_json::to_string(&all_cmd_data).unwrap();
-        println!("添加完之后的数据: {:?}", json_data);
+        // println!("添加完之后的数据: {:?}", json_data);
 
         match write_user_command_setting_data(json_data) {
             Ok(_) => println!("写入成功"),
             Err(why) => println!("写入失败: {}", why),
         };
 
-        Ok(serde_json::json!({ "result": "CommandOne executed" }))
+        Ok(serde_json::json!({ "result": all_cmd_data }))
     }
 }
 

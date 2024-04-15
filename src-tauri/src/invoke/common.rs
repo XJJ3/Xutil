@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 pub static USER_CMD_FILE: &str = "commands.x";
+pub static USER_CMD_ICON_FILE_DIR: &str = "cmd_icons";
 
 // 定义一个命令 trait，所有命令都会实现这个 trait
 pub trait CommandTrait: Sized + Send + Sync + 'static {

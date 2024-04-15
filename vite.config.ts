@@ -35,6 +35,9 @@ export default defineConfig({
         {
           'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar'],
         },
+        {
+          '@/common': ['GLOBAL_USER_DATA_DIR', 'ASSETS_TEMP_DIR'],
+        },
       ],
       dts: 'types/auto-imports.d.ts',
       eslintrc: {
