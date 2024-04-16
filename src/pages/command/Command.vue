@@ -1,7 +1,7 @@
 <template>
   <div class="command_wrapper" data-tauri-drag-region>
     <div class="command_content" data-tauri-drag-region>
-      <div class="command_list">
+      <div class="command_list" data-tauri-drag-region>
         <div v-for="(item, index) in selectedGroupCmdArr" :key="index" class="btn middle">
           <img :src="item.cmdIcon" />
           <span>{{ item.cmd_name }}</span>
@@ -123,7 +123,14 @@ const getLocalImage = (obj: Array<any>, key: string) => {
 
 const handleSelectGroup = (index: number) => {
   selectedGroupIndex.value = index;
-  selectedGroupCmdArr.value = groupList.value[index].commands;
+  if (selectedGroupCmdArr.value.length <= 0)
+    selectedGroupCmdArr.value = groupList.value[index].commands;
+  else {
+    selectedGroupCmdArr.value = groupList.value[index].commands.map((item: any) => {
+      const has = selectedGroupCmdArr.value.find((i) => i.cmd_name == item.cmd_name);
+      return { ...item, loading: has ? has.loading : false };
+    });
+  }
   nextTick(() => getLocalImage(selectedGroupCmdArr.value, 'cmdIcon'));
 };
 

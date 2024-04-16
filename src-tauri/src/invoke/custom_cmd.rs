@@ -301,7 +301,7 @@ impl CommandTrait for ExecuteCmd {
         }
 
         let handle = thread::spawn(move || {
-            // thread::sleep(Duration::from_secs(5));
+            // thread::sleep(Duration::from_secs(20));
             let status = cmd.status().expect("Failed to execute command");
             // 检查命令是否成功执行
             if status.success() {
