@@ -42,10 +42,19 @@
           <span>添加</span>
         </div>
 
-        <div class="tool_item">
-          <img src="@/assets/command/del.svg" />
-          <span>删除</span>
-        </div>
+        <n-popconfirm v-model:show="showDel">
+          <template #trigger>
+            <div class="tool_item">
+              <img src="@/assets/command/del.svg" />
+              <span>删除</span>
+            </div>
+          </template>
+          确认删除？
+          <template #action>
+            <n-button size="small" @click="showDel = false"> 确认 </n-button>
+            <n-button size="small" @click="handleDelGroup"> 取消 </n-button>
+          </template>
+        </n-popconfirm>
       </div>
     </div>
     <div class="command_menu" data-tauri-drag-region>
@@ -94,6 +103,7 @@ const message = useMessage();
 const groupList = ref<any[]>([]);
 const selectedGroupIndex = ref(0);
 const selectedGroupCmdArr = ref<any[]>([]);
+const showDel = ref(false);
 
 const getAllCommand = () => {
   invoke('dispatch_command', { name: 'get_all_commands', args: {} }).then(async (response: any) => {
@@ -222,6 +232,10 @@ const handleNewCommandGroup = () => {
     console.log(webview);
     webview.setFocus();
   }
+};
+
+const handleDelGroup = () => {
+  console.log('121313');
 };
 
 function getFileExtension(fileName: string) {
