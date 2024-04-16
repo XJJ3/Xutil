@@ -17,7 +17,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: '/add-command',
-    meta: { title: '添加指令' },
+    meta: { title: '添加命令' },
     component: () => import('@/pages/command/addCommand'),
   },
   {

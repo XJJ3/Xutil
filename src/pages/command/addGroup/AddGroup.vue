@@ -90,6 +90,7 @@ const handleSelectFile = async () => {
 
   if (!filePath) return;
   const path = Array.isArray(filePath) ? filePath[0] : filePath;
+
   const contents = await readBinaryFile(path);
 
   const fileExtension = getFileExtension(path);

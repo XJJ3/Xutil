@@ -11,30 +11,21 @@
     <!-- <div>{{ result }}</div> -->
 
     <div class="command_list">
-     
-
       <!-- <div class="btn middle"></div> -->
       <div class="btn middle">
-        <img src="@/assets/command/open.svg" alt="">
+        <img src="@/assets/command/open.svg" alt="" />
         <span>打开项目</span>
       </div>
-
     </div>
 
-
-   
-
     <div class="tool">
-
       <div class="tool_item" @click="handleNewCommand">
-        <img src="@/assets/command/add.svg" alt="">
+        <img src="@/assets/command/add.svg" alt="" />
         <span>添加</span>
       </div>
 
       <div class="tool_item"></div>
-
     </div>
-
   </div>
 </template>
 <script setup lang="ts">
@@ -46,46 +37,47 @@ import { ref } from 'vue';
 const result = ref('');
 
 const handleClick = () => {
-  invoke('dispatch_command', { name: 'add_command', args: { cmd: 'sh', args: ["/xujunjie/aaa/cmd.sh"], current_dir: '/'}})
-  .then((response) => console.log(response))
-}
+  invoke('dispatch_command', {
+    name: 'add_command',
+    args: { cmd: 'sh', args: ['/xujunjie/aaa/cmd.sh'], current_dir: '/' },
+  }).then((response) => console.log(response));
+};
 const handleClick2 = () => {
-  invoke('dispatch_command', { name: 'get_all_commands', args: {}})
-  .then((response) => console.log(response))
-}
+  invoke('dispatch_command', { name: 'get_all_commands', args: {} }).then((response) =>
+    console.log(response)
+  );
+};
 
 const handleClick3 = () => {
-  invoke('dispatch_command', { name: 'execute_cmd', args: { cmd: 'ls', args: [] }})
-  .then((response) => {
-    console.log(response);
-    result.value += JSON.stringify(response);
-  })
-}
+  invoke('dispatch_command', { name: 'execute_cmd', args: { cmd: 'ls', args: [] } }).then(
+    (response) => {
+      console.log(response);
+      result.value += JSON.stringify(response);
+    }
+  );
+};
 
 const handleClick4 = () => {
-  emit('blur')
-}
+  emit('blur');
+};
 
 const handleNewCommand = () => {
-
   const webview = WebviewWindow.getByLabel('addCommand');
 
-  if(!webview) {
+  if (!webview) {
     new WebviewWindow('addCommand', {
       url: 'https://tauri.app/',
-      "fullscreen": false,
-      "height": 300,
-      "resizable": false,
-      "title": "添加指令",
-      "width": 500,
-    })
+      fullscreen: false,
+      height: 300,
+      resizable: false,
+      title: '添加命令',
+      width: 500,
+    });
   } else {
     console.log(webview);
     webview.setFocus();
   }
-
-  
-}
+};
 </script>
 
 <style scoped lang="scss">
@@ -104,7 +96,7 @@ const handleNewCommand = () => {
 
     .btn {
       height: 32px;
-      background-color: rgba(255,255,255,0.2);
+      background-color: rgba(255, 255, 255, 0.2);
       border-radius: 5px;
       margin-bottom: 12px;
       margin-right: 12px;
@@ -135,12 +127,8 @@ const handleNewCommand = () => {
         height: 18px;
         margin-right: 2px;
       }
-
     }
-
   }
-
-
 
   .tool {
     width: 90%;
@@ -156,7 +144,7 @@ const handleNewCommand = () => {
     align-items: center;
     padding: 2px;
     box-sizing: border-box;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 
     .tool_item {
       width: 48%;
@@ -169,7 +157,6 @@ const handleNewCommand = () => {
       justify-content: center;
 
       opacity: 0.6;
-
 
       & > img {
         height: 70%;
@@ -194,6 +181,5 @@ const handleNewCommand = () => {
       }
     }
   }
-  
 }
 </style>

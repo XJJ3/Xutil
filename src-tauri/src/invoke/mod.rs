@@ -17,6 +17,7 @@ impl CommandContainer {
             "get_all_commands" => custom_cmd::GetAllCommands::execute,
             "add_command_group" => custom_cmd::AddCommandGroup::execute,
             "add_command" => custom_cmd::AddCommand::execute,
+            "del_command" => custom_cmd::DelCommand::execute,
             "execute_cmd" => custom_cmd::ExecuteCmd::execute,
             _ => return Err(format!("Unknown command: {}", name)),
         };
@@ -29,6 +30,5 @@ pub async fn dispatch_command(
     name: String,
     args: serde_json::Value,
 ) -> Result<serde_json::Value, String> {
-    println!("我收到了请求");
     CommandContainer::execute_command(&name, &args).await
 }

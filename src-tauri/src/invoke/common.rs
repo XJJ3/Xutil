@@ -8,11 +8,13 @@ pub trait CommandTrait: Sized + Send + Sync + 'static {
     fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String>;
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CommandData {
+    pub cmd_name: String,
     pub cmd: String,
     pub args: Vec<String>,
     pub current_dir: Option<String>,
+    pub cmd_icon: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -29,15 +31,29 @@ pub struct AddCommandGroupParams {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct AddCommandParams {
+pub struct DelCommandGroupParams {
     pub group_name: Option<String>,
-    pub cmd: String,
-    pub args: Vec<String>,
-    pub current_dir: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct UserData {
-    pub name: String,
-    pub age: u16,
+pub struct AddCommandParams {
+    pub group_name: Option<String>,
+    pub cmd: String,
+    pub cmd_name: String,
+    pub args: Vec<String>,
+    pub current_dir: Option<String>,
+    pub cmd_icon: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DelCommandParams {
+    pub cmd_name: String,
+    pub group_name: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ExecuteCmdData {
+    pub cmd: String,
+    pub args: Vec<String>,
+    pub current_dir: Option<String>,
 }

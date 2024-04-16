@@ -13,12 +13,9 @@ fn main() {
         })
         .invoke_handler(tauri::generate_handler![invoke::dispatch_command])
         .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::Focused(_focused) => {
+            tauri::WindowEvent::Focused(focused) => {
                 // hide window whenever it loses focus
-                // if !focused {
-                //     event.window().set_ignore_cursor_events(false).unwrap();
-                // }
-                // println!("聚焦");
+                let _ = event.window().emit("windowFocused", focused);
             }
             tauri::WindowEvent::Moved(_moved) => {
                 // println!("移动");
