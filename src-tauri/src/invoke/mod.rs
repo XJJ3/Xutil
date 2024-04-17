@@ -1,7 +1,8 @@
-use self::common::CommandTrait;
+use self::common::{AsyncCommandTrait, CommandTrait};
 
 mod common;
 mod custom_cmd;
+mod translate;
 mod util;
 
 // 存储所有命令的容器
@@ -13,15 +14,16 @@ impl CommandContainer {
         name: &str,
         args: &serde_json::Value,
     ) -> Result<serde_json::Value, String> {
-        let r#fn = match name {
-            "get_all_commands" => custom_cmd::GetAllCommands::execute,
-            "add_command_group" => custom_cmd::AddCommandGroup::execute,
-            "add_command" => custom_cmd::AddCommand::execute,
-            "del_command" => custom_cmd::DelCommand::execute,
-            "execute_cmd" => custom_cmd::ExecuteCmd::execute,
+        match name {
+            "get_all_commands" => custom_cmd::GetAllCommands::execute(args),
+            "add_command_group" => custom_cmd::AddCommandGroup::execute(args),
+            "del_command_group" => custom_cmd::DelCommandGroup::execute(args),
+            "add_command" => custom_cmd::AddCommand::execute(args),
+            "del_command" => custom_cmd::DelCommand::execute(args),
+            "execute_cmd" => custom_cmd::ExecuteCmd::execute(args),
+            "translate" => translate::TranslateText::execute(args).await,
             _ => return Err(format!("Unknown command: {}", name)),
-        };
-        r#fn(args)
+        }
     }
 }
 

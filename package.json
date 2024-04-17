@@ -9,10 +9,13 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
+    "crypto-js": "^4.2.0",
+    "simplebar-vue": "^2.3.3",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.11.30",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
@@ -33,7 +36,6 @@
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
-    "vfonts": "^0.0.3",
     "vite": "^5.2.0",
     "vue-tsc": "^2.0.6"
   }

@@ -5,13 +5,18 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/home',
     meta: { title: '首页' },
-    redirect: '/home/command',
+    redirect: '/home/translate',
     component: BasicLayout,
     children: [
       {
         path: 'command',
         meta: { title: '指令' },
         component: () => import('@/pages/command'),
+      },
+      {
+        path: 'translate',
+        meta: { title: '翻译' },
+        component: () => import('@/pages/translate'),
       },
     ],
   },

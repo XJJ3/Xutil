@@ -100,7 +100,7 @@ pub fn write_user_command_setting_data(content: String) -> Result<String, String
 
         let _ = file.set_len(0); // 清空文件内容
 
-        println!("写入文件内容： {}", content);
+        // println!("写入文件内容： {}", content);
         match file.write_all(content.as_bytes()) {
             Err(why) => Err(why.to_string()),
             Ok(_) => Ok(String::from("successfully")),

@@ -149,7 +149,7 @@ impl CommandTrait for AddCommand {
     fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String> {
         println!("指令：{}", args);
         let params = serde_json::from_str::<AddCommandParams>(&args.to_string()).unwrap();
-        println!("准备写入指令数据：{:?}", params);
+        // println!("准备写入指令数据：{:?}", params);
 
         let group_name = match params.group_name {
             Some(name) => name,
@@ -223,7 +223,7 @@ impl CommandTrait for AddCommand {
         }
 
         let json_data = serde_json::to_string(&all_cmd_data).unwrap();
-        println!("添加完之后的数据: {:?}", json_data);
+        // println!("添加完之后的数据: {:?}", json_data);
 
         match write_user_command_setting_data(json_data) {
             Ok(_) => println!("写入成功"),
@@ -265,9 +265,9 @@ impl CommandTrait for DelCommand {
             }
         }
 
-        println!("最后结果： {:?}", &all_cmd_data);
+        // println!("最后结果： {:?}", &all_cmd_data);
         let json_data = serde_json::to_string(&all_cmd_data).unwrap();
-        println!("最后序列化结果： {:?}", json_data);
+        // println!("最后序列化结果： {:?}", json_data);
 
         match write_user_command_setting_data(json_data) {
             Ok(_) => println!("写入成功"),

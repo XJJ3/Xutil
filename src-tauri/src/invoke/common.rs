@@ -7,7 +7,9 @@ pub static USER_CMD_ICON_FILE_DIR: &str = "cmd_icons";
 pub trait CommandTrait: Sized + Send + Sync + 'static {
     fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String>;
 }
-
+pub trait AsyncCommandTrait: Sized + Send + Sync + 'static {
+    async fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String>;
+}
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CommandData {
     pub cmd_name: String,
@@ -56,4 +58,22 @@ pub struct ExecuteCmdData {
     pub cmd: String,
     pub args: Vec<String>,
     pub current_dir: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct TranslateUrlParam {
+    pub url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct TransResult {
+    src: String,
+    dst: String,
+}
+#[derive(Debug, Serialize, Deserialize)]
+struct TranslateResponseBody {
+    from: String,
+    to: String,
+    trans_result: Vec<TransResult>,
+    error_code: Option<i32>,
 }

@@ -1,8 +1,12 @@
 <template>
   <div class="app_window_wrap" @click="() => emit('blur')">
     <div class="app_menu_area">
-      <button class="menu_item" @click.stop="handleClick">
+      <button class="menu_item" @click.stop="() => handleClick('/home/command')">
         <img src="@/assets/menu/command.svg" />
+      </button>
+
+      <button class="menu_item" @click.stop="() => handleClick('/home/translate')">
+        <img src="@/assets/menu/translate.svg" />
       </button>
     </div>
     <div class="app_cont_area" data-tauri-drag-region @click.stop="false">
@@ -17,9 +21,12 @@
 </template>
 <script setup lang="ts">
 import { emit } from '@tauri-apps/api/event';
+import { useRouter } from 'vue-router';
 
-const handleClick = () => {
-  console.log('12');
+const router = useRouter();
+
+const handleClick = (route: string) => {
+  router.push(route);
 };
 </script>
 <style scoped lang="scss">
@@ -63,10 +70,16 @@ const handleClick = () => {
 
       user-select: none;
       -webkit-user-select: none;
+      padding: 7px;
+      margin-right: 8px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
 
       img {
-        width: 90%;
-        height: 90%;
+        width: 100%;
+        height: 100%;
       }
     }
   }
