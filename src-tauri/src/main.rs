@@ -1,13 +1,21 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::Manager;
+use std::env;
 
 mod common;
 mod event;
 mod invoke;
+mod logger;
 
 fn main() {
+    let _ = fix_path_env::fix(); // <---- Add this
+    let _ = logger::register_logger();
+
+    for (key, value) in std::env::vars() {
+        log::trace!("{}: {}", key, value);
+    }
+
     tauri::Builder::default()
         .setup(|app| {
             event::listen_front_event(app);

@@ -223,9 +223,7 @@ const handleNewCommand = () => {
 
   if (!webview) {
     new WebviewWindow('addCommand', {
-      url: `http://localhost:5173/#/add-command?groupName=${
-        groupList.value[selectedGroupIndex.value].group_name
-      }`,
+      url: `#/add-command?groupName=${groupList.value[selectedGroupIndex.value].group_name}`,
       fullscreen: false,
       height: 350,
       resizable: false,
@@ -244,7 +242,7 @@ const handleNewCommandGroup = () => {
 
   if (!webview) {
     new WebviewWindow('addCommandGroup', {
-      url: 'http://localhost:5173/#/add-command-group',
+      url: '#/add-command-group',
       fullscreen: false,
       height: 180,
       resizable: false,

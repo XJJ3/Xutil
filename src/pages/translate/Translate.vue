@@ -87,6 +87,7 @@
 <script setup lang="ts">
 import { encryptByMd5 } from '@/utils/encrypt';
 import { invoke } from '@tauri-apps/api';
+import { appLogDir } from '@tauri-apps/api/path';
 
 const message = useMessage();
 const inputVal = ref('');
@@ -145,6 +146,12 @@ const translateReq = () => {
 function genSalt() {
   return Math.random().toString(36).substring(2, 10);
 }
+
+onMounted(() => {
+  appLogDir().then((res) => {
+    console.log(res);
+  });
+});
 </script>
 <style scoped lang="scss">
 .translate_wrapper {

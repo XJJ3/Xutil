@@ -6,11 +6,9 @@ use super::{
 };
 use std::{
     fs,
-    io::{BufRead, BufReader},
     path::Path,
     process::{Command, Stdio},
     thread,
-    time::Duration,
 };
 
 pub struct GetAllCommands;
@@ -283,16 +281,21 @@ pub struct ExecuteCmd;
 impl CommandTrait for ExecuteCmd {
     fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String> {
         println!("指令：{}", args);
+        log::trace!("指令：{}", args);
         let params = match serde_json::from_str::<ExecuteCmdData>(&args.to_string()) {
             Ok(arg) => arg,
             Err(_) => return Err("参数解析失败！".to_string()),
         };
 
-        if params.cmd.is_empty() {
+        let command = params.cmd;
+
+        if command.is_empty() {
             return Err("请传入指令".to_string());
         }
-        let mut cmd = Command::new(params.cmd);
+
+        let mut cmd = Command::new(command);
         cmd.args(&params.args);
+        // cmd.env("PATH", "/Users/xujunjie:/Users/xujunjie/Library/pnpm:/Users/xujunjie/emsdk:/Users/xujunjie/emsdk/upstream/emscripten:/Users/xujunjie/.nvm/versions/node/v20.10.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/VMware Fusion Tech Preview.app/Contents/Public:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/xujunjie:/Users/xujunjie/Library/pnpm:/Users/xujunjie/miniconda3/bin:/Users/xujunjie/miniconda3/condabin:/Users/xujunjie/.cargo/bin:/Applications/flutter/bin:/Users/xujunjie/Library/Android/sdk/tools:/Users/xujunjie/Library/Android/sdk/platform-tools");
 
         if let Some(cur_dir) = params.current_dir {
             if !cur_dir.is_empty() {
@@ -302,14 +305,25 @@ impl CommandTrait for ExecuteCmd {
 
         let handle = thread::spawn(move || {
             // thread::sleep(Duration::from_secs(20));
-            let status = cmd.status().expect("Failed to execute command");
-            // 检查命令是否成功执行
-            if status.success() {
-                println!("Script executed successfully!");
-            } else {
-                println!("Script failed to execute: {}", status);
-            }
-            status
+
+            log::trace!("开始执行命令: {:?}", cmd);
+            let status = cmd.status();
+
+            match status {
+                Ok(status) => {
+                    // 检查命令是否成功执行
+                    if status.success() {
+                        log::trace!("命令执行成功");
+                        println!("Script executed successfully!");
+                    } else {
+                        log::trace!("命令执行失败： {}", status);
+                        println!("Script failed to execute: {}", status);
+                    }
+                }
+                Err(err) => {
+                    log::error!("命令执行错误： {}", err.to_string());
+                }
+            };
 
             // let child = cmd
             //     .stdout(Stdio::piped())
