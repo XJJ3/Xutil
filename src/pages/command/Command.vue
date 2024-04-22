@@ -208,6 +208,9 @@ onMounted(async () => {
 
   const listWrapper = document.getElementsByClassName('simplebar-content-wrapper')[0];
   if (listWrapper) listWrapper.setAttribute('data-tauri-drag-region', 'true');
+
+  const listContent = document.getElementsByClassName('simplebar-content')[0];
+  if (listContent) listContent.setAttribute('data-tauri-drag-region', 'true');
 });
 
 onUnmounted(() => {

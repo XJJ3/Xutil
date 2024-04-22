@@ -8,6 +8,9 @@ dependencies:
   '@tauri-apps/api':
     specifier: ^1.5.3
     version: 1.5.3
+  '@vue-js-cron/naive-ui':
+    specifier: ^2.0.1
+    version: 2.0.1
   crypto-js:
     specifier: ^4.2.0
     version: 4.2.0
@@ -789,6 +792,18 @@ packages:
       '@volar/language-core': 2.1.6
       path-browserify: 1.0.1
     dev: true
+
+  /@vue-js-cron/core@5.0.1:
+    resolution: {integrity: sha512-eMCVQb7Y/DmjobCZ9CjbGNHbRm6q3R+6jIMnd8GN4/lbx5nn1I9CjeigfM2MRwKE7r4NCh2/Ilk/ZJa350Rtqw==}
+    dependencies:
+      mustache: 4.2.0
+    dev: false
+
+  /@vue-js-cron/naive-ui@2.0.1:
+    resolution: {integrity: sha512-WQt5PPXYtH0uf6XgLrIHVpVADZUEmSH9Qn1ESLki9q1Ae8XOn0fxWFjdvgtGfZwKhVnfY3aNUB8aEpHiHkQPbA==}
+    dependencies:
+      '@vue-js-cron/core': 5.0.1
+    dev: false
 
   /@vue/compiler-core@3.4.21:
     resolution: {integrity: sha512-MjXawxZf2SbZszLPYxaFCjxfibYrzr3eYbKxwpLR9EQN+oaziSu3qKVbwBERj1IFIB8OLUewxB5m/BFzi613og==}
@@ -2246,6 +2261,11 @@ packages:
   /muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
     dev: true
+
+  /mustache@4.2.0:
+    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
+    hasBin: true
+    dev: false
 
   /naive-ui@2.38.1(vue@3.4.21):
     resolution: {integrity: sha512-AnU1FQ7K/CbhguAX++V4kCFjk7h7RvWt4nvZPRjORMpq+fUIlzD+EcQ5Cv1VqDloNF8+eMv4Akc2Ogacc9S+5A==}

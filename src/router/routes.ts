@@ -18,6 +18,11 @@ export const routes: RouteRecordRaw[] = [
         meta: { title: '翻译' },
         component: () => import('@/pages/translate'),
       },
+      {
+        path: 'notice',
+        meta: { title: '强提醒' },
+        component: () => import('@/pages/notice'),
+      },
     ],
   },
   {
@@ -29,5 +34,15 @@ export const routes: RouteRecordRaw[] = [
     path: '/add-command-group',
     meta: { title: '添加分组' },
     component: () => import('@/pages/command/addGroup'),
+  },
+  {
+    path: '/add-notice',
+    meta: { title: '添加强提醒' },
+    component: () => import('@/pages/notice/addNotice'),
+  },
+  {
+    path: '/show-notice',
+    meta: { title: '强提醒' },
+    component: () => import('@/pages/notice/show'),
   },
 ];

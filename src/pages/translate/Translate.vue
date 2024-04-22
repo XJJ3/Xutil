@@ -119,18 +119,26 @@ const handleKeydown = (event: KeyboardEvent) => {
 const translateReq = () => {
   const content = inputVal.value;
 
+  if (!content) {
+    transVal.value = '';
+    return;
+  }
+
   const url = 'https://fanyi-api.baidu.com/api/trans/vip/translate';
   const appid = '20240417002026646';
   const key = 'u7UPXSZUzozjxwDPI1Rv';
   const slatStr = genSalt();
 
-  const str1 = `${appid}${content}${slatStr}${key}`;
+  // const str1 = `${appid}${content}${slatStr}${key}`;
+  const str1 = appid + content + slatStr + key;
   const sign = encryptByMd5(str1);
 
   const from = fromLang.value;
   const to = fromLang.value === 'zh' ? 'en' : 'zh';
 
-  const reqUrl = `${url}?q=${content}&from=${from}&to=${to}&appid=${appid}&salt=${slatStr}&sign=${sign}`;
+  const reqUrl = `${url}?q=${encodeURI(
+    content
+  )}&from=${from}&to=${to}&appid=${appid}&salt=${slatStr}&sign=${sign}`;
 
   invoke('dispatch_command', {
     name: 'translate',
@@ -139,7 +147,12 @@ const translateReq = () => {
     },
   }).then((response: any) => {
     const res = JSON.parse(response.body);
-    transVal.value = res.trans_result?.[0]?.dst;
+    let content = '';
+    for (let i = 0; i < res.trans_result.length; i++) {
+      content += res.trans_result?.[i]?.dst;
+      content += '\n';
+    }
+    transVal.value = content;
   });
 };
 

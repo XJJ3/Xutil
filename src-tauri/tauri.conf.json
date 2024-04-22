@@ -62,6 +62,10 @@
     "updater": {
       "active": false
     },
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
     "macOSPrivateApi": true,
     "windows": [{
       "fullscreen": false,
@@ -71,7 +75,9 @@
       "width": 240,
       "transparent": true,
       "decorations": false,
-      "alwaysOnTop": true
+      "alwaysOnTop": true,
+      "skipTaskbar": true
+
     }]
   }
 }

@@ -8,6 +8,10 @@
       <button class="menu_item" @click.stop="() => handleClick('/home/translate')">
         <img src="@/assets/menu/translate.svg" />
       </button>
+
+      <button class="menu_item" @click.stop="() => handleClick('/home/notice')">
+        <img src="@/assets/menu/notice.svg" />
+      </button>
     </div>
     <div class="app_cont_area" data-tauri-drag-region @click.stop="false">
       <router-view v-slot="{ Component, route }">
@@ -78,6 +82,11 @@ const handleClick = (route: string) => {
       }
 
       img {
+        width: 100%;
+        height: 100%;
+      }
+
+      & > svg {
         width: 100%;
         height: 100%;
       }
