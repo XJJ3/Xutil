@@ -18,14 +18,16 @@ const LOG_FILE_COUNT: u32 = 5;
 // const RUN_TIME: Duration = Duration::from_secs(2);
 
 /// Location where logs will be written to
-const FILE_PATH: &str = "/Users/xujunjie/Library/Logs/XUtil/logs/xutil.log";
+// const FILE_PATH: &str = "/Users/xujunjie/Library/Logs/XUtil/logs/xutil.log";
+const FILE_PATH: &str = "/logs/xutil.log";
 
 /// Location where log archives will be moved to
 /// For Pattern info See:
 ///     https://docs.rs/log4rs/*/log4rs/append/rolling_file/policy/compound/roll/fixed_window/struct.FixedWindowRollerBuilder.html#method.build
-const ARCHIVE_PATTERN: &str = "/Users/xujunjie/Library/Logs/XUtil/logs/archive/foo.{}.log";
+const ARCHIVE_PATTERN: &str = "/logs/archive/foo.{}.log";
+// const ARCHIVE_PATTERN: &str = "/Users/xujunjie/Library/Logs/XUtil/logs/archive/foo.{}.log";
 
-use log::{debug, error, info, trace, warn, LevelFilter, SetLoggerError};
+use log::{LevelFilter, SetLoggerError};
 use log4rs::{
     append::{
         console::{ConsoleAppender, Target},
@@ -37,9 +39,16 @@ use log4rs::{
     encode::pattern::PatternEncoder,
     filter::threshold::ThresholdFilter,
 };
+use tauri::App;
 
-pub fn register_logger() -> Result<(), SetLoggerError> {
+pub fn register_logger(app: &mut App) -> Result<(), SetLoggerError> {
     println!("==================开始注册日志系统========================");
+    // println!("{:?}", app.path_resolver().app_log_dir());
+    let log_dir = app.path_resolver().app_log_dir().unwrap();
+    let log_dir_string: String = log_dir.display().to_string();
+    let log_file_path = log_dir_string.clone() + FILE_PATH;
+    let archive_pattern = log_dir_string.clone() + ARCHIVE_PATTERN;
+
     let level = log::LevelFilter::Info;
 
     // Build a stderr logger.
@@ -49,7 +58,7 @@ pub fn register_logger() -> Result<(), SetLoggerError> {
     let trigger = SizeTrigger::new(TRIGGER_FILE_SIZE);
     let roller = FixedWindowRoller::builder()
         .base(0) // Default Value (line not needed unless you want to change from 0 (only here for demo purposes)
-        .build(ARCHIVE_PATTERN, LOG_FILE_COUNT) // Roll based on pattern and max 3 archive files
+        .build(&archive_pattern, LOG_FILE_COUNT) // Roll based on pattern and max 3 archive files
         .unwrap();
     let policy = CompoundPolicy::new(Box::new(trigger), Box::new(roller));
 
@@ -57,7 +66,7 @@ pub fn register_logger() -> Result<(), SetLoggerError> {
     let logfile = log4rs::append::rolling_file::RollingFileAppender::builder()
         // Pattern: https://docs.rs/log4rs/*/log4rs/encode/pattern/index.html
         .encoder(Box::new(PatternEncoder::new("{l} - {m}\n")))
-        .build(FILE_PATH, Box::new(policy))
+        .build(log_file_path, Box::new(policy))
         .unwrap();
 
     // Log Trace level output to file where trace is the default level

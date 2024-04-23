@@ -15,8 +15,8 @@ mod scheduler;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let _ = fix_path_env::fix(); // <---- Add this
-    let _ = logger::register_logger();
+    let _ = fix_path_env::fix();
+    // let _ = logger::register_logger();
     scheduler::init_job_scheduler().await?;
 
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -30,6 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tauri::Builder::default()
         .setup(|app| {
             event::listen_front_event(app);
+            let _ = logger::register_logger(app);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![invoke::dispatch_command])
