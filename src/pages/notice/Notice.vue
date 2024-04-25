@@ -26,29 +26,37 @@
   </div>
 </template>
 <script setup lang="ts">
+import { invoke } from '@tauri-apps/api';
 import { emit } from '@tauri-apps/api/event';
 import { WebviewWindow } from '@tauri-apps/api/window';
 import simplebar from 'simplebar-vue';
 import 'simplebar-vue/dist/simplebar.min.css';
 
-const handleNewNotice = () => {
-  emit('scheduler_test');
+const getAllNotice = () => {
+  invoke('dispatch_command', {
+    name: 'get_scheduler_job_list',
+    args: {},
+  }).then((response: any) => {
+    console.log(response);
+  });
+};
 
-  // const webview = WebviewWindow.getByLabel('addNotice');
-  // if (!webview) {
-  //   new WebviewWindow('addNotice', {
-  //     url: `#/add-notice`,
-  //     fullscreen: false,
-  //     height: 480,
-  //     resizable: false,
-  //     title: '添加强提醒',
-  //     width: 650,
-  //     alwaysOnTop: true,
-  //     transparent: true,
-  //   });
-  // } else {
-  //   webview.setFocus();
-  // }
+const handleNewNotice = () => {
+  const webview = WebviewWindow.getByLabel('addNotice');
+  if (!webview) {
+    new WebviewWindow('addNotice', {
+      url: `#/add-notice`,
+      fullscreen: false,
+      height: 480,
+      resizable: false,
+      title: '添加强提醒',
+      width: 650,
+      alwaysOnTop: true,
+      transparent: true,
+    });
+  } else {
+    webview.setFocus();
+  }
 
   // const webview = WebviewWindow.getByLabel('showNotice');
   // if (!webview) {
@@ -69,6 +77,8 @@ const handleNewNotice = () => {
 };
 
 onMounted(async () => {
+  getAllNotice();
+
   const listWrapper = document.getElementsByClassName('simplebar-content-wrapper')[0];
   if (listWrapper) listWrapper.setAttribute('data-tauri-drag-region', 'true');
 

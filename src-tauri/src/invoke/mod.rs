@@ -22,6 +22,7 @@ impl CommandContainer {
             "execute_cmd" => custom_cmd::ExecuteCmd::execute(args),
             "translate" => translate::TranslateText::execute(args).await,
             "add_scheduler_job" => scheduler::AddSchedulerJob::execute(args),
+            "get_scheduler_job_list" => scheduler::GetAllSchedulerJob::execute(args),
             _ => return Err(format!("Unknown command: {}", name)),
         }
     }

@@ -74,7 +74,7 @@ pub struct SchedulerData {
     pub scheduler: String,
     pub notice_title: String,
     pub title_position: String,
-    pub font_size: String,
+    pub font_size: u16,
     pub title_color: String,
     pub background_color: String,
     pub is_run: bool,

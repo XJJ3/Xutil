@@ -49,9 +49,11 @@
 import '@vue-js-cron/naive-ui/dist/naive-ui.css';
 import { CronNaive } from '@vue-js-cron/naive-ui';
 import { FormInst } from 'naive-ui/es/form/src/interface';
+import { invoke } from '@tauri-apps/api';
+import { WebviewWindow, getCurrent } from '@tauri-apps/api/window';
 
 const error = ref('');
-
+const message = useMessage();
 const formRef = ref<FormInst | null>(null);
 const formValue = ref({
   scheduler: '* * * * *',
@@ -93,12 +95,38 @@ const noticeType = [
 });
 
 const handleAddNotice = (e: MouseEvent) => {
-  // console.log(formValue.value);
-  e.preventDefault();
   formRef.value?.validate((errors) => {
     console.log(formValue.value);
+
+    invoke('dispatch_command', {
+      name: 'add_scheduler_job',
+      args: {
+        ...formValue.value,
+        scheduler_id: generateUUID(),
+        is_run: true,
+      },
+    }).then((response: any) => {
+      console.log(response);
+
+      message.success('添加成功');
+
+      window.setTimeout(() => {
+        const win = getCurrent();
+        win.close();
+        const mainWin = WebviewWindow.getByLabel('main');
+        mainWin?.setFocus();
+      }, 1500);
+    });
   });
 };
+
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = crypto.getRandomValues(new Uint8Array(1))[0] % 16 | 0;
+    var v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 </script>
 <style scoped lang="scss">
 .add_notice_page {
