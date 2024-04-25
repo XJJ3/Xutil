@@ -2,12 +2,11 @@ use self::common::{AsyncCommandTrait, CommandTrait};
 
 mod common;
 mod custom_cmd;
+mod scheduler;
 mod translate;
-mod util;
 
 // 存储所有命令的容器
 pub struct CommandContainer;
-
 impl CommandContainer {
     // 根据名称获取并执行命令
     async fn execute_command(
@@ -22,6 +21,7 @@ impl CommandContainer {
             "del_command" => custom_cmd::DelCommand::execute(args),
             "execute_cmd" => custom_cmd::ExecuteCmd::execute(args),
             "translate" => translate::TranslateText::execute(args).await,
+            "add_scheduler_job" => scheduler::AddSchedulerJob::execute(args),
             _ => return Err(format!("Unknown command: {}", name)),
         }
     }

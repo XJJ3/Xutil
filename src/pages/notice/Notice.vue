@@ -26,25 +26,29 @@
   </div>
 </template>
 <script setup lang="ts">
+import { emit } from '@tauri-apps/api/event';
 import { WebviewWindow } from '@tauri-apps/api/window';
 import simplebar from 'simplebar-vue';
 import 'simplebar-vue/dist/simplebar.min.css';
 
 const handleNewNotice = () => {
-  const webview = WebviewWindow.getByLabel('addNotice');
-  if (!webview) {
-    new WebviewWindow('addNotice', {
-      url: `#/add-notice`,
-      fullscreen: false,
-      height: 480,
-      resizable: false,
-      title: '添加强提醒',
-      width: 650,
-      alwaysOnTop: true,
-    });
-  } else {
-    webview.setFocus();
-  }
+  emit('scheduler_test');
+
+  // const webview = WebviewWindow.getByLabel('addNotice');
+  // if (!webview) {
+  //   new WebviewWindow('addNotice', {
+  //     url: `#/add-notice`,
+  //     fullscreen: false,
+  //     height: 480,
+  //     resizable: false,
+  //     title: '添加强提醒',
+  //     width: 650,
+  //     alwaysOnTop: true,
+  //     transparent: true,
+  //   });
+  // } else {
+  //   webview.setFocus();
+  // }
 
   // const webview = WebviewWindow.getByLabel('showNotice');
   // if (!webview) {
@@ -57,6 +61,7 @@ const handleNewNotice = () => {
   //     title: '添加强提醒',
   //     alwaysOnTop: true,
   //     decorations: false,
+  //     transparent: true,
   //   });
   // } else {
   //   webview.setFocus();

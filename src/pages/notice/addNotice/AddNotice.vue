@@ -95,7 +95,9 @@ const noticeType = [
 const handleAddNotice = (e: MouseEvent) => {
   // console.log(formValue.value);
   e.preventDefault();
-  formRef.value?.validate((errors) => {});
+  formRef.value?.validate((errors) => {
+    console.log(formValue.value);
+  });
 };
 </script>
 <style scoped lang="scss">

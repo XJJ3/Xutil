@@ -67,6 +67,7 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "fix-path-env",
+ "lazy_static",
  "log",
  "log4rs",
  "rand 0.8.5",

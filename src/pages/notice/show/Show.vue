@@ -13,7 +13,7 @@ const handleClose = () => {
 .show_notice_page {
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 1);
+  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
   left: 0;

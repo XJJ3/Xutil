@@ -2,7 +2,6 @@ use reqwest::Response;
 use serde_json::Value;
 
 use super::common::AsyncCommandTrait;
-
 pub struct TranslateText;
 impl AsyncCommandTrait for TranslateText {
     async fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String> {

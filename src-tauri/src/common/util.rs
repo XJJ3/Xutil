@@ -7,8 +7,7 @@ use std::{
 use rand::{distributions::Alphanumeric, Rng};
 use tauri::api::path::local_data_dir;
 
-use super::common::{USER_CMD_FILE, USER_CMD_ICON_FILE_DIR};
-use crate::common::GLOBAL_USER_DATA_DIR;
+use super::constant::*;
 
 pub fn get_user_data_directory() -> Option<Box<PathBuf>> {
     let data_dir = match local_data_dir() {
@@ -33,6 +32,18 @@ pub fn get_command_file_path() -> Option<Box<Path>> {
     let command_data_dir = match get_user_data_directory() {
         Some(mut path) => {
             path.push(USER_CMD_FILE);
+            path
+        }
+        None => return None,
+    };
+
+    Some(command_data_dir.as_path().into())
+}
+
+pub fn get_scheduler_file_path() -> Option<Box<Path>> {
+    let command_data_dir = match get_user_data_directory() {
+        Some(mut path) => {
+            path.push(USER_SCHEDULER_FILE);
             path
         }
         None => return None,
@@ -90,6 +101,45 @@ pub fn read_user_command_setting_data() -> Result<String, String> {
 
 pub fn write_user_command_setting_data(content: String) -> Result<String, String> {
     if let Some(path) = get_command_file_path() {
+        let mut file = match get_file(&path) {
+            Err(_) => match File::create(&path) {
+                Err(_) => return Err("路径不存在，尝试创建文件失败！".to_string()),
+                Ok(file) => file,
+            },
+            Ok(file) => file,
+        };
+
+        let _ = file.set_len(0); // 清空文件内容
+
+        // println!("写入文件内容： {}", content);
+        match file.write_all(content.as_bytes()) {
+            Err(why) => Err(why.to_string()),
+            Ok(_) => Ok(String::from("successfully")),
+        }
+    } else {
+        Err("系统用户数据路径获取失败".to_string())
+    }
+}
+
+pub fn read_user_scheduler_setting_data() -> Result<String, String> {
+    let data_dir = match get_scheduler_file_path() {
+        Some(path) => path,
+        None => return Err(String::from("任务文件路径查询失败")),
+    };
+
+    let mut file = match get_file(&data_dir) {
+        Err(why) => return Err(why.to_string()),
+        Ok(file) => file,
+    };
+
+    let mut contents = String::new();
+    let _ = file.read_to_string(&mut contents);
+
+    Ok(contents)
+}
+
+pub fn write_user_scheduler_setting_data(content: String) -> Result<String, String> {
+    if let Some(path) = get_scheduler_file_path() {
         let mut file = match get_file(&path) {
             Err(_) => match File::create(&path) {
                 Err(_) => return Err("路径不存在，尝试创建文件失败！".to_string()),

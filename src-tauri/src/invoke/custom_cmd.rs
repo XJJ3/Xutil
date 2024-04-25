@@ -1,15 +1,7 @@
-use crate::invoke::util::{generate_uuid, get_command_icons_file_dir};
+use std::{fs, path::Path, process::Command, thread};
 
-use super::{
-    common::*,
-    util::{read_user_command_setting_data, write_user_command_setting_data},
-};
-use std::{
-    fs,
-    path::Path,
-    process::{Command, Stdio},
-    thread,
-};
+use super::common::*;
+use crate::common::{entity::*, util::*};
 
 pub struct GetAllCommands;
 impl CommandTrait for GetAllCommands {
@@ -295,7 +287,6 @@ impl CommandTrait for ExecuteCmd {
 
         let mut cmd = Command::new(command);
         cmd.args(&params.args);
-        // cmd.env("PATH", "/Users/xujunjie:/Users/xujunjie/Library/pnpm:/Users/xujunjie/emsdk:/Users/xujunjie/emsdk/upstream/emscripten:/Users/xujunjie/.nvm/versions/node/v20.10.0/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Library/Apple/usr/bin:/Applications/VMware Fusion Tech Preview.app/Contents/Public:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/xujunjie:/Users/xujunjie/Library/pnpm:/Users/xujunjie/miniconda3/bin:/Users/xujunjie/miniconda3/condabin:/Users/xujunjie/.cargo/bin:/Applications/flutter/bin:/Users/xujunjie/Library/Android/sdk/tools:/Users/xujunjie/Library/Android/sdk/platform-tools");
 
         if let Some(cur_dir) = params.current_dir {
             if !cur_dir.is_empty() {
