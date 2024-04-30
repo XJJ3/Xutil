@@ -1,43 +1,48 @@
 <template>
-  <div class="notice_wrapper">
+  <div class="notice_wrapper" data-tauri-drag-region>
     <simplebar class="notice_list" data-tauri-drag-region>
-      <div class="notice_item">
-        <n-checkbox style="margin-right: 10px"></n-checkbox>
-        <span>项目名称</span>
-        <span>提醒方式</span>
+      <div v-for="(item, index) in allSchedulerJob" :key="index" class="notice_item">
+        <!-- <n-checkbox style="margin-right: 10px"></n-checkbox> -->
+        <n-switch v-model:value="item.is_run" size="small" />
+        <div class="notice_title">
+          <div class="text">{{ item.notice_title }}</div>
+          <span class="title_position">{{ item.title_position }}</span>
+        </div>
       </div>
-      <div class="notice_item">
-        <n-checkbox style="margin-right: 10px"></n-checkbox>
-        <span>项目名称</span>
-        <span>提醒方式</span>
-      </div>
-      <n-button dashed style="width: 60%; margin: 20px 20% 16px" @click="handleNewNotice">
-        <template #icon>
-          <svg class="icon" viewBox="0 0 1024 1024" width="48" height="48" fill="currentColor">
-            <path
-              d="M469.333334 213.333334 469.333334 469.333334 213.333334 469.333334 213.333334 554.666666 469.333334 554.666666 469.333334 810.666664 554.666666 810.666664 554.666666 554.666666 810.666664 554.666666 810.666664 469.333334 554.666666 469.333334 554.666666 213.333334 469.333334 213.333334Z"
-              p-id="3024"
-            ></path>
-          </svg>
-        </template>
-        添加
-      </n-button>
     </simplebar>
+
+    <n-button dashed style="width: 60%; margin: 20px 20% 16px" @click="handleNewNotice">
+      <template #icon>
+        <svg class="icon" viewBox="0 0 1024 1024" width="48" height="48" fill="currentColor">
+          <path
+            d="M469.333334 213.333334 469.333334 469.333334 213.333334 469.333334 213.333334 554.666666 469.333334 554.666666 469.333334 810.666664 554.666666 810.666664 554.666666 554.666666 810.666664 554.666666 810.666664 469.333334 554.666666 469.333334 554.666666 213.333334 469.333334 213.333334Z"
+            p-id="3024"
+          ></path>
+        </svg>
+      </template>
+      添加
+    </n-button>
   </div>
 </template>
 <script setup lang="ts">
 import { invoke } from '@tauri-apps/api';
-import { emit } from '@tauri-apps/api/event';
+import { emit, listen } from '@tauri-apps/api/event';
 import { WebviewWindow } from '@tauri-apps/api/window';
 import simplebar from 'simplebar-vue';
 import 'simplebar-vue/dist/simplebar.min.css';
+
+const allSchedulerJob = ref<any[]>([]);
 
 const getAllNotice = () => {
   invoke('dispatch_command', {
     name: 'get_scheduler_job_list',
     args: {},
   }).then((response: any) => {
-    console.log(response);
+    const res = JSON.parse(response.result);
+    if (Array.isArray(res)) {
+      console.log(res);
+      allSchedulerJob.value = res;
+    }
   });
 };
 
@@ -76,14 +81,22 @@ const handleNewNotice = () => {
   // }
 };
 
+let unListen: () => void;
 onMounted(async () => {
   getAllNotice();
+  unListen = await listen('windowFocused', (event) => {
+    if (event.payload) getAllNotice();
+  });
 
   const listWrapper = document.getElementsByClassName('simplebar-content-wrapper')[0];
   if (listWrapper) listWrapper.setAttribute('data-tauri-drag-region', 'true');
 
   const listContent = document.getElementsByClassName('simplebar-content')[0];
   if (listContent) listContent.setAttribute('data-tauri-drag-region', 'true');
+});
+
+onUnmounted(() => {
+  unListen && unListen();
 });
 </script>
 <style lang="scss" scoped>
@@ -94,7 +107,7 @@ onMounted(async () => {
 
   .notice_list {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 60px);
     padding: 12px 0;
     box-sizing: border-box;
 
@@ -107,6 +120,28 @@ onMounted(async () => {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
+
+      .notice_title {
+        position: relative;
+        margin-left: 10px;
+        max-width: 160px;
+
+        .text {
+          overflow: hidden; //超出的文本隐藏
+          text-overflow: ellipsis; //溢出用省略号显示
+          white-space: nowrap; //溢出不换行
+        }
+
+        .title_position {
+          position: absolute;
+          right: 0;
+          top: 0;
+          background-color: gray;
+          border-radius: 4px;
+          padding: 0 4px;
+          transform: translate(80%, -40%) scale(0.6);
+        }
+      }
     }
   }
 }

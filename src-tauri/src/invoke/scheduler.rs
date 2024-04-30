@@ -1,4 +1,7 @@
-use crate::common::{entity::SchedulerData, util::*};
+use crate::{
+    common::{entity::SchedulerData, util::*},
+    GLOBAL_SCHEDULER_MANAGE,
+};
 
 use super::common::*;
 
@@ -29,16 +32,25 @@ impl CommandTrait for AddSchedulerJob {
 
         let mut all_scheduler_job: Vec<SchedulerData> = vec![];
         if let Some(cont) = contents {
+            println!("当前内容： {:?}", cont);
             all_scheduler_job = serde_json::from_str::<Vec<SchedulerData>>(&cont).unwrap();
-            all_scheduler_job.push(params);
         }
+        all_scheduler_job.push(params.clone());
 
         let json_data = serde_json::to_string(&all_scheduler_job).unwrap();
 
+        println!("最后的结果{:?}", json_data);
+
         match write_user_scheduler_setting_data(json_data) {
             Ok(_) => println!("写入成功"),
-            Err(why) => println!("写入失败: {}", why),
+            Err(why) => {
+                println!("写入失败: {}", why);
+                return Err("写入失败".to_string());
+            }
         };
+
+        let manage = unsafe { GLOBAL_SCHEDULER_MANAGE.get_mut().unwrap() };
+        manage.add_job(&params);
 
         Ok(serde_json::json!({ "result": "all_cmd_data" }))
     }

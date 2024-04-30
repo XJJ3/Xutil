@@ -26,11 +26,12 @@ impl SchedulerManage {
 
         for sched_job in all_scheduler_job.iter() {
             if sched_job.is_run {
+                let notice_title = sched_job.notice_title.clone();
                 let job_id = self
                     .scheduler
                     .add(
-                        Job::new("1/10 * * * * *", |_uuid, _l| {
-                            println!("I run every 10 seconds");
+                        Job::new("1/10 * * * * *", move |_uuid, _l| {
+                            println!("{}", notice_title);
                         })
                         .unwrap(),
                     )
@@ -45,14 +46,17 @@ impl SchedulerManage {
         self
     }
 
-    pub async fn add_job(&mut self, id: String) -> Result<(), JobSchedulerError> {
+    pub async fn add_job(&mut self, sched_job: &SchedulerData) -> Result<(), JobSchedulerError> {
+        let notice_title = sched_job.notice_title.clone();
+
         let job_id = self
             .scheduler
-            .add(Job::new("1/10 * * * * *", |_uuid, _l| {
-                println!("I run every 10 seconds");
+            .add(Job::new("1/10 * * * * *", move |_uuid, _l| {
+                println!("{}", notice_title);
             })?)
             .await?;
-        self.running_job_map.insert(id, job_id.to_string());
+        self.running_job_map
+            .insert(sched_job.scheduler_id.clone(), job_id.to_string());
         Ok(())
     }
 

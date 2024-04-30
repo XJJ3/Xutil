@@ -68,7 +68,7 @@ pub struct TranslateResponseBody {
     pub error_code: Option<i32>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SchedulerData {
     pub scheduler_id: String,
     pub scheduler: String,

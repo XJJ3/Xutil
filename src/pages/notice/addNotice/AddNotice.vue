@@ -115,7 +115,7 @@ const handleAddNotice = (e: MouseEvent) => {
         win.close();
         const mainWin = WebviewWindow.getByLabel('main');
         mainWin?.setFocus();
-      }, 1500);
+      }, 500);
     });
   });
 };

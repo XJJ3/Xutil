@@ -15,7 +15,7 @@ use tauri::{
 
 use crate::scheduler::SchedulerManage;
 
-pub static GLOBAL_SCHEDULER_MANAGE: OnceLock<SchedulerManage> = OnceLock::new();
+pub static mut GLOBAL_SCHEDULER_MANAGE: OnceLock<SchedulerManage> = OnceLock::new();
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -24,7 +24,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // scheduler::init_job_scheduler().await?;
 
     let binding = scheduler::SchedulerManage::new().await?.init().await;
-    GLOBAL_SCHEDULER_MANAGE.get_or_init(|| binding);
+    unsafe {
+        GLOBAL_SCHEDULER_MANAGE.get_or_init(|| binding);
+    }
 
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let hide = CustomMenuItem::new("hide".to_string(), "Hide");
