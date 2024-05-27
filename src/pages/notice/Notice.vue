@@ -5,8 +5,8 @@
         <!-- <n-checkbox style="margin-right: 10px"></n-checkbox> -->
         <n-switch v-model:value="item.is_run" size="small" />
         <div class="notice_title">
-          <div class="text">{{ item.notice_title }}</div>
-          <span class="title_position">{{ item.title_position }}</span>
+          <div class="text">阿斯达大厦{{ item.notice_title }}</div>
+          <!-- <span class="title_position">{{ item.title_position }}</span> -->
         </div>
       </div>
     </simplebar>

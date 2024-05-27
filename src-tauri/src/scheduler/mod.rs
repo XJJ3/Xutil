@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use std::str::FromStr;
 
+use cron::Schedule;
 use tokio_cron_scheduler::{Job, JobScheduler, JobSchedulerError};
 
 use crate::common::{entity::SchedulerData, util::read_user_scheduler_setting_data};
@@ -27,10 +29,14 @@ impl SchedulerManage {
         for sched_job in all_scheduler_job.iter() {
             if sched_job.is_run {
                 let notice_title = sched_job.notice_title.clone();
+                println!("{}", sched_job.scheduler);
+                let scheduler = "* 14 * * *";
+                let schedule = Schedule::from_str(scheduler).unwrap();
+
                 let job_id = self
                     .scheduler
                     .add(
-                        Job::new("1/10 * * * * *", move |_uuid, _l| {
+                        Job::new(schedule, move |_uuid, _l| {
                             println!("{}", notice_title);
                         })
                         .unwrap(),
@@ -74,7 +80,7 @@ impl SchedulerManage {
 //             println!("I run every 10 seconds");
 //         })?)
 //         .await?;
-//     sched.start().await?; // Start the scheduler
+//     sched.start().await ?; // Start the scheduler
 //     println!("==================完成注册任务系统========================");
 //     Ok(())
 // }
