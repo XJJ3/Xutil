@@ -6,6 +6,7 @@
           <CronNaive
             v-model:model-value="formValue.scheduler"
             @error="error = $event"
+            format="quartz"
             locale="zh"
           ></CronNaive>
         </n-form-item-gi>
@@ -56,7 +57,7 @@ const error = ref('');
 const message = useMessage();
 const formRef = ref<FormInst | null>(null);
 const formValue = ref({
-  scheduler: '* * * * *',
+  scheduler: '* * * * * *',
   notice_title: '',
   title_position: 'center',
   font_size: 20,

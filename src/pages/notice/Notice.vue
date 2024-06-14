@@ -3,9 +3,9 @@
     <simplebar class="notice_list" data-tauri-drag-region>
       <div v-for="(item, index) in allSchedulerJob" :key="index" class="notice_item">
         <!-- <n-checkbox style="margin-right: 10px"></n-checkbox> -->
-        <n-switch v-model:value="item.is_run" size="small" />
+        <n-switch v-model:value="item.is_run" size="small" @change="() => handleSwitch(index)" />
         <div class="notice_title">
-          <div class="text">阿斯达大厦{{ item.notice_title }}</div>
+          <div class="text">{{ item.notice_title }}</div>
           <!-- <span class="title_position">{{ item.title_position }}</span> -->
         </div>
       </div>
@@ -46,6 +46,16 @@ const getAllNotice = () => {
   });
 };
 
+const handleSwitch = (index: number) => {
+  const scheduler = allSchedulerJob.value[index];
+  if (scheduler) {
+    invoke('dispatch_command', {
+      name: 'switch_scheduler_job',
+      args: scheduler,
+    });
+  }
+};
+
 const handleNewNotice = () => {
   const webview = WebviewWindow.getByLabel('addNotice');
   if (!webview) {
@@ -55,7 +65,7 @@ const handleNewNotice = () => {
       height: 480,
       resizable: false,
       title: '添加强提醒',
-      width: 650,
+      width: 720,
       alwaysOnTop: true,
       transparent: true,
     });
@@ -107,8 +117,8 @@ onUnmounted(() => {
 
   .notice_list {
     width: 100%;
-    height: calc(100% - 60px);
-    padding: 12px 0;
+    max-height: calc(100% - 60px);
+    padding-top: 12px;
     box-sizing: border-box;
 
     .notice_item {

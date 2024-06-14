@@ -3,12 +3,13 @@ use std::str::FromStr;
 
 use cron::Schedule;
 use tokio_cron_scheduler::{Job, JobScheduler, JobSchedulerError};
+use uuid::Uuid;
 
 use crate::common::{entity::SchedulerData, util::read_user_scheduler_setting_data};
 
 pub struct SchedulerManage {
     scheduler: JobScheduler,
-    running_job_map: HashMap<String, String>,
+    running_job_map: HashMap<String, Uuid>,
 }
 
 impl SchedulerManage {
@@ -30,7 +31,7 @@ impl SchedulerManage {
             if sched_job.is_run {
                 let notice_title = sched_job.notice_title.clone();
                 println!("{}", sched_job.scheduler);
-                let scheduler = "* 14 * * *";
+                let scheduler = &sched_job.scheduler;
                 let schedule = Schedule::from_str(scheduler).unwrap();
 
                 let job_id = self
@@ -44,7 +45,7 @@ impl SchedulerManage {
                     .await
                     .unwrap();
                 self.running_job_map
-                    .insert(sched_job.scheduler_id.to_string(), job_id.to_string());
+                    .insert(sched_job.scheduler_id.to_string(), job_id);
             }
         }
 
@@ -54,19 +55,47 @@ impl SchedulerManage {
 
     pub async fn add_job(&mut self, sched_job: &SchedulerData) -> Result<(), JobSchedulerError> {
         let notice_title = sched_job.notice_title.clone();
+        let scheduler = &sched_job.scheduler;
+        let schedule = Schedule::from_str(scheduler).unwrap();
 
         let job_id = self
             .scheduler
-            .add(Job::new("1/10 * * * * *", move |_uuid, _l| {
+            .add(Job::new(schedule, move |_uuid, _l| {
                 println!("{}", notice_title);
             })?)
             .await?;
         self.running_job_map
-            .insert(sched_job.scheduler_id.clone(), job_id.to_string());
+            .insert(sched_job.scheduler_id.clone(), job_id);
         Ok(())
     }
 
-    pub fn get_running_jobs(&self) -> &HashMap<String, String> {
+    pub async fn switch_job(&mut self, sched_job: &SchedulerData) -> Result<(), JobSchedulerError> {
+        let sched_job_id = &sched_job.scheduler_id;
+        let is_running = &sched_job.is_run;
+        if *is_running {
+            let job_id_option = self.running_job_map.get(sched_job_id);
+            if let Some(job_id) = job_id_option {
+                let _ = self.scheduler.remove(job_id).await;
+            }
+        } else {
+            let notice_title = sched_job.notice_title.clone();
+            let scheduler = &sched_job.scheduler;
+            let schedule = Schedule::from_str(scheduler).unwrap();
+
+            let job_id = self
+                .scheduler
+                .add(Job::new(schedule, move |_uuid, _l| {
+                    println!("{}", notice_title);
+                })?)
+                .await?;
+            self.running_job_map
+                .insert(sched_job.scheduler_id.clone(), job_id);
+        }
+
+        Ok(())
+    }
+
+    pub fn get_running_jobs(&self) -> &HashMap<String, Uuid> {
         &self.running_job_map
     }
 }

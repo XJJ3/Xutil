@@ -80,6 +80,7 @@ dependencies = [
  "tauri-build",
  "tokio",
  "tokio-cron-scheduler",
+ "uuid",
 ]
 
 [[package]]

@@ -56,8 +56,8 @@ impl CommandTrait for AddSchedulerJob {
     }
 }
 
-pub struct RunSchedulerJob;
-impl CommandTrait for RunSchedulerJob {
+pub struct SwitchSchedulerJob;
+impl CommandTrait for SwitchSchedulerJob {
     fn execute(args: &serde_json::Value) -> Result<serde_json::Value, String> {
         let params: SchedulerData =
             serde_json::from_str::<SchedulerData>(&args.to_string()).unwrap();

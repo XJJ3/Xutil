@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import { encryptByMd5 } from '@/utils/encrypt';
 import { invoke } from '@tauri-apps/api';
-import { appLogDir } from '@tauri-apps/api/path';
+import { appLocalDataDir, appLogDir } from '@tauri-apps/api/path';
 
 const message = useMessage();
 const inputVal = ref('');
@@ -161,6 +161,9 @@ function genSalt() {
 }
 
 onMounted(() => {
+  appLocalDataDir().then((res) => {
+    console.log(res);
+  });
   appLogDir().then((res) => {
     console.log(res);
   });

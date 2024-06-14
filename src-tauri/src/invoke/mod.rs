@@ -23,6 +23,7 @@ impl CommandContainer {
             "translate" => translate::TranslateText::execute(args).await,
             "add_scheduler_job" => scheduler::AddSchedulerJob::execute(args),
             "get_scheduler_job_list" => scheduler::GetAllSchedulerJob::execute(args),
+            "switch_scheduler_job" => scheduler::SwitchSchedulerJob::execute(args),
             _ => return Err(format!("Unknown command: {}", name)),
         }
     }
